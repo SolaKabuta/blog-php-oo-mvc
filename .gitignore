@@ -2,3 +2,5 @@
 .idea/
 # Config file
 config.php
+.bak
+.DS_Store
