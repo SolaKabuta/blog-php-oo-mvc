@@ -1,0 +1,16 @@
+Options -MultiViews
+RewriteEngine On
+
+# Rediriger vers le contrôleur frontal si le fichier ou le répertoire n'existe pas
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Règle pour nos différentes variables get :
+# ?pg=article&slug=slug-de-l-article pourra s'écire /article/slug-de-l-article
+RewriteRule ^([\w-]+)/([\w-]+)/?$ index.php?pg=$1&slug=$2 [QSA,L]
+
+# Ajout pour une seule variable etc...
+# ?pg=connection pourra s'écrire /connection
+RewriteRule ^([\w-]+)/?$ index.php?pg=$1 [QSA,L]
+
+

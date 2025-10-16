@@ -30,13 +30,23 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="./?p=admin">
-                        <i class="bi bi-gear me-1"></i>Admin Articles
+                    <a class="nav-link disabled text-white" href="#">
+                        <i class="bi bi-tags me-1"></i>Catégories :
                     </a>
                 </li>
+                <?php
+                foreach ($categoriesMenu as $category) :
+                ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="./?c=admin">
-                        <i class="bi bi-tags me-1"></i>Admin Catégories
+                    <a class="nav-link" href="./category/<?=$category->getCategorySlug()?>">
+                        <?=$category->getCategoryTitle()?>
+                    </a>
+                <?php
+                endforeach;
+                ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="./connection/">
+                        <i class="bi bi-gear me-1"></i>Connexion
                     </a>
                 </li>
             </ul>
@@ -60,6 +70,9 @@
 
 <div class="container">
 
+    <?php
+    if(empty($articles)):
+    ?>
         <!-- État vide avec style moderne -->
         <div class="row justify-content-center">
             <div class="col-md-8 text-center">
@@ -69,13 +82,16 @@
                         <h3 class="text-muted mb-3">Aucun article disponible</h3>
                         <p class="text-muted">Les premiers articles seront bientôt publiés !</p>
                         <a href="./?p=admin" class="btn btn-primary mt-3">
-                            <i class="bi bi-plus-circle me-2"></i>Créer le premier article
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-
+    <?php
+    else:
+    $nbArticles = count($articles);
+    $pluriel = ($nbArticles>1) ? "s" : "";
+    ?>
         <!-- Section des articles avec compteur -->
         <div class="row mb-4">
             <div class="col-12">
@@ -84,41 +100,53 @@
                         <i class="bi bi-collection me-2"></i>Nos Articles
                     </h2>
                     <span class="badge bg-primary rounded-pill fs-6">
-                        0 Article
+                        <?=$nbArticles?> Article<?=$pluriel?>
                     </span>
                 </div>
             </div>
         </div>
-
-        <!-- Grid des articles -->
-        <div class="row g-4">
+    <!-- Grid des articles -->
+    <div class="row g-4">
+        <?php
+        foreach ($articles as $article) :
+        ?>
 
                 <div class="col-lg-6">
                     <div class="card h-100 border-0 shadow-sm hover-card">
                         <div class="card-header bg-white border-0 pb-0">
                             <div class="d-flex align-items-center justify-content-between">
-                                <span class="badge bg-primary">Article #</span>
+                                <div>
+                                <?php
+                                // affichage des catégories de l'article
+                                $categories = $article->getCategories();
+                                if(!empty($categories)):
+                                    foreach ($categories as $category):
+                                ?>
+                                <span class="badge bg-primary  "><a class="text-white" href="./category/<?=$category->getCategorySlug()?>">
+                                        <?=$category->getCategoryTitle()?></a></span>
+                                <?php
+                                    endforeach;
+                                endif;
+                                ?>
+                                </div>
                                 <small class="text-muted">
-                                    <i class="bi bi-calendar me-1"></i>
-                                </small>
+                                    <i class="bi bi-calendar me-1"></i><?=$article->getArticleDatePublish()?></small>
                             </div>
                         </div>
                         <div class="card-body">
                             <h4 class="card-title text-primary fw-bold mb-3">
-
-                            </h4>
+                                <?=html_entity_decode($article->getArticleTitle())?></h4>
                             <p class="card-text text-muted">
-
-                                    <span class="text-primary">... Lire la suite</span>
-
+                                <?=html_entity_decode($article->getArticleText())?><span class="text-primary"> <a href="./article/<?=$article->getArticleSlug()?>">Lire la suite</a></span>
                             </p>
                         </div>
                         <div class="card-footer bg-white border-0">
                             <div class="d-flex justify-content-between align-items-center">
                             <span class="badge bg-light text-primary">
                                 <i class="bi bi-eye me-1"></i>
-                                0 vue
-                            </span>
+                                Publié par <?php
+                                // affichage du UserRealName, si null (??) on affiche UserLogin
+                                echo $article->getUser()->getUserRealName() ?? $article->getUser()->getUserLogin()?></span>
                                 <small class="text-muted">
                                     <i class="bi bi-clock me-1"></i>Lecture rapide
                                 </small>
@@ -127,16 +155,21 @@
                     </div>
                 </div>
 
+    <?php
+        endforeach;
+    endif;
+    ?>
+<?php
+//var_dump($articles);
+?>
         </div>
-
-</div>
 
 <!-- Footer -->
 <footer class="bg-dark text-white mt-5 py-4">
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <p class="mb-0">© <?=date("Y")?> Mon Blog. Tous droits réservés.</p>
+                <p class="mb-0">© <?=date("Y")?> Mon Blog d'exemple. Aucun droit réservé.</p>
             </div>
             <div class="col-md-4 text-md-end">
                 <small class="text-muted">Propulsé par Bootstrap 5</small>

@@ -1,6 +1,8 @@
 <?php
 // path: controller/routerController.php
 
+
+
 # Connexion PDO
 try {
     $connectPDO = new PDO(
@@ -15,8 +17,18 @@ try {
 } catch (Exception $e) {
     die($e->getMessage());
 }
+if(isset($_SESSION["user_id"],$_SESSION["role"])){
+
+    if($_SESSION["role"] === "admin"){
+
+    }elseif ($_SESSION["role"] === "user"){
+
+    }
+}else{
+    // Contrôleur partie publique
+    require_once RACINE_PATH . "/controller/publicController.php";
+}
 
 
-include RACINE_PATH."/view/home.html.php";
 
 $connectPDO = null;
