@@ -9,3 +9,4 @@ config.php
 # ignore backup WorkBench
 /data/MyModel.mwb.bak
 >>>>>>> 3d722f83014ae28f02c3b5b1769d73f4150ac5f8
+.vendor
