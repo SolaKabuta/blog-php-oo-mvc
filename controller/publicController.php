@@ -20,8 +20,12 @@ if(empty($_GET['pg'])){
 
     echo $twig->render('homepage.html.twig',
     [
+        // racine URL pour les liens
+        'racineURL' => RACINE_URL,
         // mes catégories pour le menu
         'categories' => $categoriesMenu,
+        // mes articles pour la homepage
+        'articles'=> $articles,
     ]);
     /*
     // exemple d'utilisation basique de twig
@@ -45,8 +49,13 @@ if(empty($_GET['pg'])){
             break;
         case "connection":
             // page connexion
-            echo "<h2>Nous serons sur la page de connexion</h2>";
-            var_dump($_GET);
+            echo $twig->render('connection.html.twig',
+                [
+                    // racine URL pour les liens
+                    'racineURL' => RACINE_URL,
+                    // mes catégories pour le menu
+                    'categories' => $categoriesMenu,
+                ]);
             break;
         default:
             // page 404
